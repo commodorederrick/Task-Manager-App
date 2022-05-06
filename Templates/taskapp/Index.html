@@ -1,0 +1,99 @@
+{% extends 'partials/base.html' %}  <br>
+{% block title %} Home {% endblock %} <br>
+{% load crispy_forms_tags %}<br>
+{% block content %}
+
+<!-- Start of main section -->
+<div class="container my-4">
+    <div class="row">
+        <div class="col-xl-8">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">Statistics</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xl-4">
+                            <div class="card my-card shadow bg-dark text-white">
+                                <p>Total Tasks</p>
+                                <h5 class="text-center">{{ total_data }}</h5>
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="card my-card shadow bg-dark text-white">
+                                <p>Completed Tasks</p>
+                            <h5 class="text-center">{{ complete_task }}</h5>
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="card my-card shadow bg-dark text-white">
+                                <p>Uncompleted Tasks</p>
+                                <h5 class="text-center">{{ uncomplete_task }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">Task Form</div>
+                <div class="card-body">
+                    <form class="d-grid" method="POST">
+                        {% csrf_token %} {{ form|crispy }}
+                        <input class="btn btn-success btn-sm mt-3" type="submit" value="Save">
+                        
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- End of stat section -->
+
+
+<!-- Start of Graph Section-->
+<div class="container">
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="card">
+                <div class="card-header">Graph</div>
+                <div class="card-body">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 ">
+            <div class="card">
+                <div class="card-header bg-dark text-white">Task List</div>
+                {% for task in data %}
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <small>{{task.date}}</small>
+                                {% if task.isComplete %}<br>
+                                <del>{{ task.task }}</del>
+                                {% else %} <br>
+                                <p>{{ task.task }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <div>
+                                    <a class="btn btn-info btn-sm" href="{% url 'taskapp-edit' task.id %}">Edit</a>
+                                    <a class="btn btn-danger btn-sm" href="{% url 'taskapp-delete' task.id %}">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- End of Graph Section -->
+{% include 'partials/graph.html' %} <br>
+
+{% endblock %}
